@@ -1,0 +1,153 @@
+class Node:
+    def __init__(self, time):
+        self.time = time
+        self.next = None
+
+class MagallanesBusStopSchedule:
+    def __init__(self):
+        self.head = None
+
+    def add_schedule(self, time):
+        """ Adds a new time to the circular schedule in sorted order """
+        new_node = Node(time)
+
+        if not self.head:  # If the schedule is empty
+            self.head = new_node
+            new_node.next = self.head
+            return
+
+        # Case 1: Insert before head (new head)
+        if time < self.head.time:
+            # Find the last node to update its next pointer
+            temp = self.head
+            while temp.next != self.head:
+                temp = temp.next
+            temp.next = new_node
+            new_node.next = self.head
+            self.head = new_node
+            return
+
+        # Case 2: Insert in sorted position
+        temp = self.head
+        while temp.next != self.head and temp.next.time < time:
+            temp = temp.next
+
+        new_node.next = temp.next
+        temp.next = new_node
+
+    def delete_schedule(self, time):
+        """ Deletes a specific time from the schedule while maintaining the circular nature """
+        if not self.head:
+            print("Schedule is empty.")
+            return
+
+        temp = self.head
+        prev = None
+
+        # Case 1: Deleting the head node
+        if temp.time == time:
+            if temp.next == self.head:  # Only one node in the list
+                self.head = None
+                print(f"Time '{time}' deleted from the schedule.")
+                return
+            else:
+                # Find the last node to update its next pointer
+                while temp.next != self.head:
+                    temp = temp.next
+                temp.next = self.head.next
+                self.head = self.head.next
+                print(f"Time '{time}' deleted from the schedule.")
+                return
+
+        # Case 2: Deleting a non-head node
+        temp = self.head
+        while temp.next != self.head:
+            prev = temp
+            temp = temp.next
+            if temp.time == time:
+                prev.next = temp.next
+                print(f"Time '{time}' deleted from the schedule.")
+                return
+
+        print(f"Time '{time}' not found in the schedule.")
+
+    def display_schedule(self):
+        """ Displays all the times in the circular schedule """
+        if not self.head:
+            print("Schedule is empty.")
+            return
+
+        temp = self.head
+        print("\nMagallanes Bus Stop Schedule:")
+        while True:
+            print(temp.time, end=" -> ")
+            temp = temp.next
+            if temp == self.head:
+                break
+        print("HEAD\n")
+
+    def search_schedule(self, time):
+        """ Searches for a specific time in the schedule """
+        if not self.head:
+            print("Schedule is empty.")
+            return False
+
+        temp = self.head
+        while True:
+            if temp.time == time:
+                print(f"Time '{time}' found in the schedule.")
+                return True
+            temp = temp.next
+            if temp == self.head:
+                break
+
+        print(f"Time '{time}' not found in the schedule.")
+        return False
+
+def generate_hourly_schedule(schedule, start_time, end_time):
+    """ Automatically generates an hourly schedule from start_time to end_time """
+    current_hour = int(start_time[:2])  # Extract the hour from the start time
+    end_hour = int(end_time[:2])
+
+    while current_hour <= end_hour:
+        time_str = f"{current_hour:02d}:00"  # Format the hour as "HH:00"
+        schedule.add_schedule(time_str)
+        current_hour += 1
+
+def menu():
+    """ User menu for interacting with the bus stop schedule """
+    schedule = MagallanesBusStopSchedule()
+
+    # Automatically generate the initial schedule from 05:00 to 10:00
+    generate_hourly_schedule(schedule, "05:00", "10:00")
+
+    while True:
+        print("\n=== Magallanes Bus Stop Schedule Menu ===")
+        print("1. Add a schedule")
+        print("2. Delete a schedule")
+        print("3. Display the schedule")
+        print("4. Search for a schedule")
+        print("5. Exit")
+
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            time = input("Enter the time to add (in HH:MM format): ")
+            schedule.add_schedule(time)
+            print(f"Time '{time}' added to the schedule.")
+        elif choice == '2':
+            time = input("Enter the time to delete (in HH:MM format): ")
+            schedule.delete_schedule(time)
+        elif choice == '3':
+            schedule.display_schedule()
+        elif choice == '4':
+            time = input("Enter the time to search for (in HH:MM format): ")
+            schedule.search_schedule(time)
+        elif choice == '5':
+            print("Exiting the Magallanes Bus Stop Schedule. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
+
+if __name__ == "__main__":
+    menu()

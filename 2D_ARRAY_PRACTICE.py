@@ -1,3 +1,5 @@
+##BUS SCHEDULE APP###
+
 # 2D array representing bus schedules 
 bus_schedules = [
     ["05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00"],

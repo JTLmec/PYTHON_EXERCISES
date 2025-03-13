@@ -114,12 +114,14 @@ def generate_hourly_schedule(schedule, start_time, end_time):
         schedule.add_schedule(time_str)
         current_hour += 1
 
+
 def menu():
     """ User menu for interacting with the bus stop schedule """
     schedule = MagallanesBusStopSchedule()
-
-    # Automatically generate the initial schedule from 05:00 to 10:00
+   
+# Automatically generate the initial schedule from 05:00 to 10:00
     generate_hourly_schedule(schedule, "05:00", "10:00")
+
 
     while True:
         print("\n=== Magallanes Bus Stop Schedule Menu ===")
@@ -127,7 +129,8 @@ def menu():
         print("2. Delete a schedule")
         print("3. Display the schedule")
         print("4. Search for a schedule")
-        print("5. Exit")
+    
+       
 
         choice = input("Enter your choice (1-5): ")
 

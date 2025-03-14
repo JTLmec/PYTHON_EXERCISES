@@ -1,0 +1,32 @@
+class Queue:
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, item):
+        self.queue.append(item)                     ##Add an element to the back of the queue.
+        print(f"Enqueued: {item}")
+
+    def dequeue(self):                              ##Remove and return the front element of the queue
+        if not self.is_empty():                 
+            removed_item = self.queue.pop(0)
+            print(f"Dequeued: {removed_item}")
+            return removed_item
+        else:
+            print("Queue is empty!")
+
+    def is_empty(self):
+        """Check if the queue is empty."""
+        return len(self.queue) == 0
+
+    def display(self):
+        """Display the queue elements."""
+        print("Queue:", self.queue)
+
+# Example Usage
+q = Queue()
+q.enqueue(1)
+q.enqueue(2)
+q.enqueue(3)
+q.display()
+q.dequeue()
+q.display()

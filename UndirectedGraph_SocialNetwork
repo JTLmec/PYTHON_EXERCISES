@@ -1,0 +1,94 @@
+class UndirectedGraph:
+    def __init__(self):
+        self.graph = {}
+
+    #Add a person (node) to the graph
+    def add_person(self, person):
+        if person not in self.graph:
+            self.graph[person] = set()
+
+    #Add a connection (edge) between two people.
+    def add_connection(self, person1, person2):
+        if person1 in self.graph and person2 in self.graph:
+            self.graph[person1].add(person2)
+            self.graph[person2].add(person1)
+
+    #Display all connections in the graph
+    def display_graph(self):
+        print("\nConnections in the graph:")
+        for person, connections in self.graph.items():
+            print(f"{person} -> {', '.join(connections) if connections else 'No connections'}")
+
+
+    #Check if two people are connected (directly or indirectly)
+    def are_connected(self, person1, person2):
+        if person1 not in self.graph or person2 not in self.graph:
+            return False
+
+        visited = set()
+        return self._dfs(person1, person2, visited)
+
+    #Depth-First Search (DFS) to check connection
+    def _dfs(self, current, target, visited):
+        if current == target:
+            return True
+        visited.add(current)
+        for neighbor in self.graph[current]:
+            if neighbor not in visited:
+                if self._dfs(neighbor, target, visited):
+                    return True
+        return False
+
+    #Find the shortest path between two people using BFS
+    def shortest_path(self, start, end):
+        if start not in self.graph or end not in self.graph:
+            return None
+
+        queue = [(start, [start])]
+        visited = set()
+
+        while queue:
+            current, path = queue.pop(0)
+            if current == end:
+                return path
+            visited.add(current)
+
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+        return None
+
+###
+    
+# Create the graph and add people
+graph = UndirectedGraph()
+people = ["Ana","Ben","Carl","Dave","Eve","Fred","Gale","Howard"]
+
+for person in people:
+    graph.add_person(person)
+
+# Define and add connections
+connections = [
+    ("Ana", "Ben"),
+    ("Ana", "Carl"),
+    ("Ben", "Dave"),
+    ("Carl", "Eve"),
+    ("Eve", "Fred"),
+    ("Fred", "Gale"),
+    ("Gale", "Howard"),
+    ("Dave", "Howard"),
+]
+for person1, person2 in connections:
+    graph.add_connection(person1, person2)
+
+# Display the graph
+graph.display_graph()
+
+# Check if two people are connected
+person1, person2 = "Ana", "Fred"
+print(f"\nAre {person1} and {person2} connected? {'Yes' if graph.are_connected(person1, person2) else 'No'}")
+
+# Find the shortest path between two people
+path = graph.shortest_path("Ana", "Howard")
+print(f"\nShortest path from {person1} to {person2}: {path if path else 'No path found'}")
